@@ -7,5 +7,4 @@ nm_proname as ProName
 FROM
 sdpp.sdpp_fml_proinfo
 where
-nm_proname = '_proNm'
-and mk_class = '_sTage'
+nm_lotid = '_LotId'

@@ -8,6 +8,7 @@ using Prism.Mvvm;
 using Reactive.Bindings;
 using WpfCtr_CreateLabel.Models;
 using System.Collections.Generic;
+using System.Windows.Media;
 
 namespace WpfCtr_CreateLabel.ViewModels
 {
@@ -74,10 +75,12 @@ namespace WpfCtr_CreateLabel.ViewModels
         //--------------------------
         public ReactiveProperty<string> ComentText { get; private set; } = new ReactiveProperty<string>();
 
+        public SolidColorBrush BorderColor { get; set; }
+
         //--------------------------
         // ラジオボタン
         //--------------------------
-        public enum TestEnum { Left, Right }
+        public enum TestEnum { dummy, Left, Right }
 
         public TestEnum RadioEnum { get; set; }
 
@@ -104,6 +107,8 @@ namespace WpfCtr_CreateLabel.ViewModels
             }
         }
 
+        private DataTable Get_AssemblyLot;
+
         //--------------------------
         // コンストラクター
         //--------------------------
@@ -111,8 +116,6 @@ namespace WpfCtr_CreateLabel.ViewModels
         {
             // ComboBox
             Create_Combo_FlmList();
-
-            // ラジオボタン
 
             // 装置検索ボタン
             AssemblyCommand = new DelegateCommand<string>(Button_Assembly);
@@ -133,6 +136,8 @@ namespace WpfCtr_CreateLabel.ViewModels
             // 装置側[ProNameInfo]
             if (assembly == "ProNameInfo")
             {
+                #region << 装置 >>
+
                 //----------------------
                 // 選択確認
                 //----------------------
@@ -146,51 +151,90 @@ namespace WpfCtr_CreateLabel.ViewModels
                     return;
                 }
 
+                // ステージ
+                if (RadioEnum.ToString() == "dummy")
+                {
+                    // エラーコメント欄に記入
+                    ComentText.Value = " Error：：[ステージ] 選択してください。";
+
+                    // 処理を中止
+                    return;
+                }
+
                 //----------------------
                 // ロット情報抽出
                 //----------------------
-                // 装置名
-                AssemblyLot_Extraction.NM_ProName = FmlSelectItem.ProName;
-
-                // ステージ　RadioEnum
-                AssemblyLot_Extraction.NM_Stage = RadioEnum.ToString();
+                // SQL FileName
+                AssemblyLot_Extraction.FM_SQL = "MySQL_FML_LatestData_Lot.sql";
 
                 // SQL実行
-                DataTable Get_AssemblyLot = AssemblyLot_Extraction.MySQL_AssemblyLot_Extra();
+                // 引数：装置名、ステージ
+                Get_AssemblyLot = AssemblyLot_Extraction.MySQL_AssemblyLot_Extra(FmlSelectItem.ProName, RadioEnum.ToString());
 
-                Console.WriteLine(Get_AssemblyLot.Rows.Count);
-
-                //--------------------------
-                // DataGridに表示
-                //--------------------------
-                var data = new ObservableCollection<FMLDataTabl>();
-
-                foreach (DataRow item in Get_AssemblyLot.Rows)
+                #endregion << 装置 >>
+            }
+            // 完成品[AssemblyInfo]
+            else if (assembly == "AssemblyInfo")
+            {
+                // nullチェック
+                if (String.IsNullOrEmpty(_fml_LotID))
                 {
-                    // Null確認
-                    if (item.ItemArray[0].ToString() == "")
-                    {
-                        // エラーコメント欄に記入
-                        ComentText.Value = " Error：：[装置情報] 最新の組立ロットを抽出できませんでした。選択条件を再度確認してください。";
+                    // エラーコメント欄に記入
+                    ComentText.Value = " Error：：[組立ロット名] 組立ロット名が入力されていません。";
 
-                        // 処理を中止
-                        return;
-                    }
+                    // DataGrid値をクリア
+                    FmlAddData.Clear();
 
-                    data.Add(new FMLDataTabl()
-                    {
-                        FmlAddData = Get_AssemblyLot.DefaultView,
-
-                        ProName = item.ItemArray[0].ToString(),
-                        AssemblyLot = item.ItemArray[1].ToString(),
-                        Cnt = int.Parse(item.ItemArray[2].ToString()),
-                        KouSei = item.ItemArray[3].ToString(),
-                        DtPro = DateTime.Parse(item.ItemArray[4].ToString())
-                    });
+                    // 処理を中止
+                    return;
                 }
 
-                FmlAddData = data;
+                //----------------------
+                // ロット情報抽出
+                //----------------------
+                // SQL FileName
+                AssemblyLot_Extraction.FM_SQL = "MySQL_FML_Assembly_Lot.sql";
+
+                // SQL実行
+                // 引数：装置名、ステージ
+                Get_AssemblyLot = AssemblyLot_Extraction.MySQL_AssemblyLot_Comp_Lot(_fml_LotID);
             }
+
+            //--------------------------
+            // DataGridに表示
+            //--------------------------
+            var data = new ObservableCollection<FMLDataTabl>();
+
+            foreach (DataRow item in Get_AssemblyLot.Rows)
+            {
+                // Null確認
+                if (item.ItemArray[0].ToString() == "")
+                {
+                    // エラーコメント欄に記入
+                    ComentText.Value = " Error：：[装置情報] 最新の組立ロットを抽出できませんでした。選択条件を再度確認してください。";
+
+                    // DataGrid値をクリア
+                    FmlAddData.Clear();
+
+                    // 処理を中止
+                    return;
+                }
+
+                // 値を入れる
+                data.Add(new FMLDataTabl()
+                {
+                    FmlAddData = Get_AssemblyLot.DefaultView,
+
+                    ProName = item.ItemArray[0].ToString(),
+                    AssemblyLot = item.ItemArray[1].ToString(),
+                    Cnt = int.Parse(item.ItemArray[2].ToString()),
+                    KouSei = item.ItemArray[3].ToString(),
+                    DtPro = DateTime.Parse(item.ItemArray[4].ToString())
+                });
+            }
+
+            // DataGridに反映する
+            FmlAddData = data;
         }
 
         //--------------------------

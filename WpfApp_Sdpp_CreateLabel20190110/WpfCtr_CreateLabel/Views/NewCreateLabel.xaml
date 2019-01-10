@@ -1,18 +1,23 @@
-﻿<UserControl x:Class="WpfCtr_CreateLabel.Views.NewCreateLabel"
+﻿<UserControl
                 xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
                 xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                 xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                 xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                 xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
                 xmlns:prism="http://prismlibrary.com/"
-                prism:ViewModelLocator.AutoWireViewModel="True"
                 xmlns:materialDesing="http://materialdesigninxaml.net/winfx/xaml/themes"
                 xmlns:local="clr-namespace:WpfCtr_CreateLabel.Views"
-                xmlns:ra="clr-namespace:WpfCtr_CreateLabel.Models">
+                xmlns:ra="clr-namespace:WpfCtr_CreateLabel.Models" xmlns:ViewModels="clr-namespace:WpfCtr_CreateLabel.ViewModels" x:Class="WpfCtr_CreateLabel.Views.NewCreateLabel"
+                prism:ViewModelLocator.AutoWireViewModel="True">
+
+    <!-- ラジオボタン -->
+    <UserControl.Resources>
+        <ra:RadioButtonConverter x:Key="EnumConverter" />
+    </UserControl.Resources>
 
     <!-- ユーザ認証PopUP -->
     <i:Interaction.Triggers>
-        <prism:InteractionRequestTrigger SourceObject="{Binding Path=InputinteractionRequest}">
+        <prism:InteractionRequestTrigger SourceObject="{Binding InputinteractionRequest}">
             <prism:PopupWindowAction IsModal="True" CenterOverAssociatedObject="True">
                 <prism:PopupWindowAction.WindowContent>
                     <local:UserAuthentication />
@@ -20,11 +25,6 @@
             </prism:PopupWindowAction>
         </prism:InteractionRequestTrigger>
     </i:Interaction.Triggers>
-
-    <!-- ラジオボタン -->
-    <UserControl.Resources>
-        <ra:RadioButtonConverter x:Key="EnumConverter" />
-    </UserControl.Resources>
 
     <!-- レイアウト -->
     <Grid>
@@ -36,8 +36,9 @@
         </Grid.RowDefinitions>
 
         <!-- ■ 処理内容 ■ -->
-        <Border Margin="10,0,10,0" BorderThickness="1" BorderBrush="#FFE3BFFB" VerticalAlignment="Center">
-            <TextBlock Text="{Binding Path=ComentText.Value}" Margin="5,0,0,0" HorizontalAlignment="Center" />
+        <Border Margin="10,0,10,0" BorderThickness="1" BorderBrush="#FFE3BFFB" VerticalAlignment="Center"
+                Background="{Binding Path=BorderColor}">
+            <TextBlock Text="{Binding ComentText.Value}" Margin="5,0,0,0" HorizontalAlignment="Center" />
         </Border>
 
         <!-- ■ Input ■ -->
@@ -54,11 +55,10 @@
                     <!-- << 装置名選択 >> -->
                     <ComboBox materialDesing:HintAssist.Hint="装置名" IsEditable="True" materialDesing:HintAssist.HintOpacity=".60"
                               Width="200" HorizontalAlignment="Left" FontSize="14" IsReadOnly="True"
-                              ItemsSource="{Binding Path=FmlItem}"
+                              ItemsSource="{Binding FmlItem}"
                               DisplayMemberPath="ProName"
                               SelectedValuePath="ProName"
-                              SelectedItem="{Binding Path=FmlSelectItem, Mode=TwoWay}">
-                    </ComboBox>
+                              SelectedItem="{Binding FmlSelectItem, Mode=TwoWay}" />
 
                     <!-- << ステージ位置 >> -->
                     <TextBlock Text="ステージ位置" Foreground="#FF656576" Margin="0,15,0,0"
@@ -66,11 +66,11 @@
 
                     <RadioButton Style="{StaticResource MaterialDesignRadioButton}" Tag="True" FontWeight="Bold"
                                  Content="Ｌｅｆｔ    （左側）" FontSize="14" Margin="15,5,0,0"
-                                 GroupName="Group1" IsChecked="{Binding Path=RadioEnum, ConverterParameter=Left, Converter={StaticResource EnumConverter}}" />
+                                 GroupName="Group1" IsChecked="{Binding RadioEnum, ConverterParameter=Left, Converter={StaticResource EnumConverter}}" />
 
                     <RadioButton Style="{StaticResource MaterialDesignRadioButton}" Tag="True" FontWeight="Bold"
                                  Content="Ｒｉｇｈｔ（右側）" FontSize="14" Margin="15,15,0,0"
-                                 GroupName="Group1" IsChecked="{Binding Path=RadioEnum, ConverterParameter=Right, Converter={StaticResource EnumConverter}}" />
+                                 GroupName="Group1" IsChecked="{Binding RadioEnum, ConverterParameter=Right, Converter={StaticResource EnumConverter}}" />
 
                     <!-- 検索ボタン -->
                     <Button Style="{StaticResource MaterialDesignRaisedDarkButton}" HorizontalAlignment="Center"
@@ -87,22 +87,23 @@
                 <StackPanel Margin="10,20,10,10">
                     <!-- << 組立ロット名 >> -->
                     <StackPanel Orientation="Horizontal">
-                        <TextBox materialDesing:HintAssist.Hint="組立ロット名" FontSize="14" Width="250"
+                        <TextBox materialDesing:HintAssist.Hint="組立ロット名" FontSize="20" Width="250"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                                  ToolTip="組立ロット名を入力してください。"
-                                 Text="{Binding Path=Fml_LotID}" />
+                                 Text="{Binding Fml_LotID}" />
 
-                        <Button Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}">
+                        <Button Style="{StaticResource MaterialDesignFloatingActionMiniDarkButton}"
+                                Command="{Binding Path=AssemblyCommand}" CommandParameter="AssemblyInfo">
                             <materialDesing:PackIcon Kind="Magnify" Height="20" Width="20" />
                         </Button>
                     </StackPanel>
 
                     <!-- << ワークシリアル >> -->
                     <StackPanel Orientation="Horizontal" Margin="0,40,0,0">
-                        <TextBox materialDesing:HintAssist.Hint="ワークシリアル" FontSize="14" Width="250"
+                        <TextBox materialDesing:HintAssist.Hint="ワークシリアル" FontSize="20" Width="250"
                              Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                              ToolTip="ワークシリアルから「組立ロット名」を検索します。"
-                                 Text="{Binding Path=Fml_WorkSerial}" />
+                                 Text="{Binding Fml_WorkSerial}" />
 
                         <Button Style="{StaticResource MaterialDesignFloatingActionMiniLightButton}">
                             <materialDesing:PackIcon Kind="Magnify" Height="20" Width="20" />
@@ -116,7 +117,7 @@
         <DataGrid Grid.Row="2" IsReadOnly="True" GridLinesVisibility="All" RowBackground="#FFFCF9FF"
                   HorizontalGridLinesBrush="#FFCBCBCB" VerticalGridLinesBrush="#FFDADADA" HeadersVisibility="Column"
                   Margin="10" BorderBrush="#FF9400D3" BorderThickness="1" AutoGenerateColumns="False"
-                  ItemsSource="{Binding Path=FmlAddData}">
+                  x:Name="FMLDataGrid" ItemsSource="{Binding Path=FmlAddData}" FontSize="18" FontWeight="Bold">
 
             <!-- ヘッダースタイル -->
             <DataGrid.ColumnHeaderStyle>
@@ -127,22 +128,23 @@
                     <Setter Property="BorderBrush" Value="#FF212121" />
                     <Setter Property="BorderThickness" Value="0.3" />
                     <Setter Property="FontWeight" Value="Bold" />
+                    <Setter Property="FontSize" Value="12" />
                 </Style>
             </DataGrid.ColumnHeaderStyle>
 
             <!-- Column設定 -->
             <DataGrid.Columns>
-                <DataGridTextColumn Header="製品名" Binding="{Binding Path=ProName}" />
-                <DataGridTextColumn Header="組立ロット名" Binding="{Binding Path=AssemblyLot}" />
-                <DataGridTextColumn Header="数量" Binding="{Binding Path=Cnt}">
+                <DataGridTextColumn Header="製品名" Binding="{Binding ProName}" />
+                <DataGridTextColumn Header="組立ロット名" Binding="{Binding AssemblyLot}" />
+                <DataGridTextColumn Header="数量" Binding="{Binding Cnt}">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property="HorizontalAlignment" Value="Right" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="構成種別" Binding="{Binding Path=KouSei}" />
-                <DataGridTextColumn Header="完成日時" Binding="{Binding Path=DtPro ,StringFormat='yyyy-MM-dd HH:mm:ss'}" />
+                <DataGridTextColumn Header="構成種別" Binding="{Binding KouSei}" />
+                <DataGridTextColumn Header="完成日時" Binding="{Binding DtPro, StringFormat=yyyy-MM-dd HH:mm:ss}" />
             </DataGrid.Columns>
         </DataGrid>
 

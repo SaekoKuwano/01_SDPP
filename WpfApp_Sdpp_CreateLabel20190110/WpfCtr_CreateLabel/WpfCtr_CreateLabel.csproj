@@ -167,5 +167,8 @@
   <ItemGroup>
     <EmbeddedResource Include="SQL\Select\MySQL_FML_LatestData_Lot.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="SQL\Select\MySQL_FML_Assembly_Lot.sql" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
