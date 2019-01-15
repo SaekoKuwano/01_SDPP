@@ -37,8 +37,9 @@
 
         <!-- ■ 処理内容 ■ -->
         <Border Margin="10,0,10,0" BorderThickness="1" BorderBrush="#FFE3BFFB" VerticalAlignment="Center"
-                Background="{Binding Path=BorderColor}">
-            <TextBlock Text="{Binding ComentText.Value}" Margin="5,0,0,0" HorizontalAlignment="Center" />
+                Background="{Binding Path=BorderColor}" Padding="3">
+            <TextBlock Text="{Binding ComentText.Value}" Margin="20,0,0,0" HorizontalAlignment="Left"
+                       FontSize="12" />
         </Border>
 
         <!-- ■ Input ■ -->
@@ -49,7 +50,7 @@
             </Grid.ColumnDefinitions>
 
             <!-- 装置 -->
-            <GroupBox Grid.Column="0" Header="装置情報" Margin="10"
+            <GroupBox x:Name="GroupA" Grid.Column="0" Header="装置情報" Margin="10"
                       ToolTip="装置から最新の１ロットをラベル出力します。" FontWeight="Bold">
                 <StackPanel Margin="20,10,10,10">
                     <!-- << 装置名選択 >> -->
@@ -82,12 +83,12 @@
             </GroupBox>
 
             <!-- 製品 -->
-            <GroupBox Grid.Column="1" Header="完成品情報" Margin="10"
+            <GroupBox x:Name="GroupB" Grid.Column="1" Header="完成品情報" Margin="10"
                       ToolTip="組立ロット名 or ワークシリアルからラベルを出力します。" FontWeight="Bold">
                 <StackPanel Margin="10,20,10,10">
                     <!-- << 組立ロット名 >> -->
                     <StackPanel Orientation="Horizontal">
-                        <TextBox materialDesing:HintAssist.Hint="組立ロット名" FontSize="20" Width="250"
+                        <TextBox x:Name="TextAssemblyLot" materialDesing:HintAssist.Hint="組立ロット名" FontSize="20" Width="250"
                                  Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                                  ToolTip="組立ロット名を入力してください。"
                                  Text="{Binding Fml_LotID}" />
@@ -100,7 +101,7 @@
 
                     <!-- << ワークシリアル >> -->
                     <StackPanel Orientation="Horizontal" Margin="0,40,0,0">
-                        <TextBox materialDesing:HintAssist.Hint="ワークシリアル" FontSize="20" Width="250"
+                        <TextBox x:Name="TextWorkSiral" materialDesing:HintAssist.Hint="ワークシリアル" FontSize="20" Width="250"
                              Style="{StaticResource MaterialDesignFloatingHintTextBox}"
                              ToolTip="ワークシリアルから「組立ロット名」を検索します。"
                                  Text="{Binding Fml_WorkSerial}" />
@@ -134,17 +135,17 @@
 
             <!-- Column設定 -->
             <DataGrid.Columns>
-                <DataGridTextColumn Header="製品名" Binding="{Binding ProName}" />
-                <DataGridTextColumn Header="組立ロット名" Binding="{Binding AssemblyLot}" />
-                <DataGridTextColumn Header="数量" Binding="{Binding Cnt}">
+                <DataGridTextColumn Header="製品名" Binding="{Binding ProName}" Width="1*" />
+                <DataGridTextColumn Header="組立ロット名" Binding="{Binding AssemblyLot}" Width="2*" />
+                <DataGridTextColumn Header="数量" Binding="{Binding Cnt}" Width="1*">
                     <DataGridTextColumn.ElementStyle>
                         <Style TargetType="{x:Type TextBlock}">
                             <Setter Property="HorizontalAlignment" Value="Right" />
                         </Style>
                     </DataGridTextColumn.ElementStyle>
                 </DataGridTextColumn>
-                <DataGridTextColumn Header="構成種別" Binding="{Binding KouSei}" />
-                <DataGridTextColumn Header="完成日時" Binding="{Binding DtPro, StringFormat=yyyy-MM-dd HH:mm:ss}" />
+                <DataGridTextColumn Header="構成種別" Binding="{Binding KouSei}" Width="1*" />
+                <DataGridTextColumn Header="完成日時" Binding="{Binding DtPro, StringFormat=yyyy-MM-dd HH:mm:ss}" Width="3*" />
             </DataGrid.Columns>
         </DataGrid>
 

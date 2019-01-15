@@ -5,14 +5,14 @@ using System.Collections.ObjectModel;
 using Prism.Commands;
 using Prism.Interactivity.InteractionRequest;
 using Prism.Mvvm;
+using Prism.Regions;
 using Reactive.Bindings;
 using WpfCtr_CreateLabel.Models;
-using System.Collections.Generic;
-using System.Windows.Media;
+using WpfCtr_CreateLabel.Views;
 
 namespace WpfCtr_CreateLabel.ViewModels
 {
-    public class NewCreateLabelViewModel : BindableBase
+    public class NewCreateLabelViewModel : BindableBase, INavigationAware
     {
         #region PopUP(ユーザ認証)
 
@@ -75,8 +75,6 @@ namespace WpfCtr_CreateLabel.ViewModels
         //--------------------------
         public ReactiveProperty<string> ComentText { get; private set; } = new ReactiveProperty<string>();
 
-        public SolidColorBrush BorderColor { get; set; }
-
         //--------------------------
         // ラジオボタン
         //--------------------------
@@ -110,10 +108,19 @@ namespace WpfCtr_CreateLabel.ViewModels
         private DataTable Get_AssemblyLot;
 
         //--------------------------
+        // IRegionManager
+        //--------------------------
+        public IRegionManager _regionManager { get; set; }
+
+        #region コンストラクター
+
+        //--------------------------
         // コンストラクター
         //--------------------------
-        public NewCreateLabelViewModel()
+        public NewCreateLabelViewModel(IRegionManager regionManager)
         {
+            _regionManager = regionManager;
+
             // ComboBox
             Create_Combo_FlmList();
 
@@ -124,9 +131,14 @@ namespace WpfCtr_CreateLabel.ViewModels
             UserAuthenCommand = new DelegateCommand(Button_Authen);
         }
 
+        #endregion コンストラクター
+
         //--------------------------
         // Button処理
         //--------------------------
+
+        #region ロット情報抽出
+
         // 検索処理
         private void Button_Assembly(string assembly)
         {
@@ -155,7 +167,7 @@ namespace WpfCtr_CreateLabel.ViewModels
                 if (RadioEnum.ToString() == "dummy")
                 {
                     // エラーコメント欄に記入
-                    ComentText.Value = " Error：：[ステージ] 選択してください。";
+                    ComentText.Value = " Error：：[ステージ位置] 選択してください。";
 
                     // 処理を中止
                     return;
@@ -237,6 +249,10 @@ namespace WpfCtr_CreateLabel.ViewModels
             FmlAddData = data;
         }
 
+        #endregion ロット情報抽出
+
+        #region Button_確定
+
         //--------------------------
         // Button_確定
         //--------------------------
@@ -260,7 +276,15 @@ namespace WpfCtr_CreateLabel.ViewModels
             {
                 Console.WriteLine("認証 null");
             }
+
+            NavigationParameters parameters = new NavigationParameters();
+
+            parameters.Add("parameter", FmlAddData[0]);
+
+            _regionManager.RequestNavigate("ContentRegion", nameof(PrintOut_Label), parameters);
         }
+
+        #endregion Button_確定
 
         //--------------------------
         // コンボボックス
@@ -279,5 +303,28 @@ namespace WpfCtr_CreateLabel.ViewModels
             // 値を格納する
             FmlItem = Items;
         }
+
+        #region IsNavigationTargetメソッド
+
+        //--------------------------
+        // IsNavigationTarget
+        //--------------------------
+        // 画面に遷移してきたときに呼び出されます
+        public void OnNavigatedTo(NavigationContext navigationContext)
+        {
+        }
+
+        // 引数で渡されたコンテキストのターゲットとなる画面かどうかを返します
+        public bool IsNavigationTarget(NavigationContext navigationContext)
+        {
+            return true;
+        }
+
+        // 画面から離れるときに呼び出されます
+        public void OnNavigatedFrom(NavigationContext navigationContext)
+        {
+        }
+
+        #endregion IsNavigationTargetメソッド
     }
 }

@@ -20,7 +20,7 @@ namespace WpfCtr_CreateLabel.Models
             set
             {
                 _proName = value;
-                OnPropertyChanged();
+                OnPropertyChanged("ProName");
             }
         }
 

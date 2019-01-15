@@ -41,6 +41,9 @@
     <Reference Include="MaterialDesignThemes.Wpf, Version=2.5.0.1205, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\MaterialDesignThemes.2.5.0.1205\lib\net45\MaterialDesignThemes.Wpf.dll</HintPath>
     </Reference>
+    <Reference Include="Pao.BarCode">
+      <HintPath>C:\Program Files (x86)\Pao@Office\Barcode.net\Pao.BarCode.dll</HintPath>
+    </Reference>
     <Reference Include="Prism, Version=7.1.0.431, Culture=neutral, PublicKeyToken=40ee6c3a2184dc59, processorArchitecture=MSIL">
       <HintPath>..\packages\Prism.Core.7.1.0.431\lib\net45\Prism.dll</HintPath>
     </Reference>
@@ -63,6 +66,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Reactive, Version=4.1.0.0, Culture=neutral, PublicKeyToken=94bc3704cddfc263, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Reactive.4.1.2\lib\net46\System.Reactive.dll</HintPath>
     </Reference>
@@ -102,6 +106,7 @@
   <ItemGroup>
     <Compile Include="Models\AssemblyLot_Extraction.cs" />
     <Compile Include="Models\AssemblyLot_Info.cs" />
+    <Compile Include="Models\ColorItem.cs" />
     <Compile Include="Models\PasswordBoxHelper.cs" />
     <Compile Include="Models\UserAuthenticationNotification.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -119,12 +124,16 @@
     </Compile>
     <Compile Include="SQL\SQL_FileReading.cs" />
     <Compile Include="ViewModels\NewCreateLabelViewModel.cs" />
+    <Compile Include="ViewModels\PrintOut_LabelViewModel.cs" />
     <Compile Include="ViewModels\UserAuthenticationViewModel.cs" />
     <Compile Include="Views\AgainCreateLabel.xaml.cs">
       <DependentUpon>AgainCreateLabel.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\NewCreateLabel.xaml.cs">
       <DependentUpon>NewCreateLabel.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\PrintOut_Label.xaml.cs">
+      <DependentUpon>PrintOut_Label.xaml</DependentUpon>
     </Compile>
     <Compile Include="Views\UserAuthentication.xaml.cs">
       <DependentUpon>UserAuthentication.xaml</DependentUpon>
@@ -153,6 +162,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\NewCreateLabel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\PrintOut_Label.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

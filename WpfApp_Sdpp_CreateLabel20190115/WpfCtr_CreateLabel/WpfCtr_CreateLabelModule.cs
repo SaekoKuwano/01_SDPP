@@ -15,6 +15,7 @@ namespace WpfCtr_CreateLabel
             containerRegistry.RegisterForNavigation<NewCreateLabel>();
             containerRegistry.RegisterForNavigation<AgainCreateLabel>();
             containerRegistry.RegisterForNavigation<UserAuthentication>();
+            containerRegistry.RegisterForNavigation<PrintOut_Label>();
         }
     }
 }
