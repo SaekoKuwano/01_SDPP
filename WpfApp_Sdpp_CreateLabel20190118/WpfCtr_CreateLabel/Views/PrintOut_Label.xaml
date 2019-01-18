@@ -1,0 +1,75 @@
+﻿<UserControl x:Class="WpfCtr_CreateLabel.Views.PrintOut_Label"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:prism="http://prismlibrary.com/"
+             prism:ViewModelLocator.AutoWireViewModel="True"
+             xmlns:local="clr-namespace:WpfCtr_CreateLabel.Views"
+             mc:Ignorable="d"
+             d:DesignHeight="90" d:DesignWidth="100">
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="2*" />
+            <RowDefinition Height="1*" />
+            <RowDefinition Height="0.5*" />
+        </Grid.RowDefinitions>
+
+        <Border BorderBrush="Black" BorderThickness="0.6">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <!-- ロット名 -->
+                <TextBlock Text="{Binding Path=Fml_LotID}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+
+                <!-- 数量 -->
+                <Border Grid.Column="1" BorderBrush="Black" BorderThickness="0.6"
+                        Margin="0,-1,0,0">
+
+                    <TextBlock Text="{Binding Path= Fml_Cnt}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                </Border>
+            </Grid>
+        </Border>
+
+        <!-- バーコード画像 -->
+        <Border Grid.Row="1" BorderBrush="Black" BorderThickness="0.6" Margin="0,-1,0,0">
+            <Image Source="{Binding Path=BarCodeLot}" Margin="5" />
+        </Border>
+
+        <!-- 製品名 -->
+        <Border Grid.Row="2" BorderBrush="Black" BorderThickness="0.6"
+                Margin="0,-1,0,0">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="{Binding Path=Fml_ProName}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="{Binding Path=Fml_Flg}" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Grid>
+        </Border>
+
+        <!-- 処理日時/枚数 -->
+        <Border Grid.Row="3" BorderBrush="Black" BorderThickness="0.6"
+                Margin="0,-1,0,0">
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="2*" />
+                    <ColumnDefinition Width="1*" />
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Text="2019-12-31 23:59:59" HorizontalAlignment="Center"
+                       FontSize="5" VerticalAlignment="Center" />
+                <TextBlock Grid.Column="1" Text="不良" HorizontalAlignment="Center" VerticalAlignment="Center"
+                       FontSize="6" />
+            </Grid>
+        </Border>
+    </Grid>
+</UserControl>
